@@ -9,8 +9,8 @@ namespace Dab_Social_Network.Services
 {
     interface IService<Model>
     {
-        List<Model> GetAll();
-        Model GetSingle(string id);
+        List<Model> Get();
+        Model Get(string id);
         Model Add(Model entity);
         void Update(Model entity, string id);
         void Delete(string id);
@@ -22,7 +22,7 @@ namespace Dab_Social_Network.Services
         public Service() { }
         public Service(string nameOfEntity)
         {
-            var client = new MongoClient("");
+            var client = new MongoClient(""); sadfadsf;
             var db = client.GetDatabase("");
             name = nameOfEntity;
 
