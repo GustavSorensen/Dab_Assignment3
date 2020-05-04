@@ -8,7 +8,7 @@ using Dab_Social_Network.Models;
 using Dab_Social_Network.Services;
 
 
-namespace DAB3_SocialNetwork.Controllers
+namespace Dab_Social_Network.Controllers
 {
     public class CircleController : Controller
     {
@@ -23,14 +23,14 @@ namespace DAB3_SocialNetwork.Controllers
         //get all circles
         public ActionResult Index()
         {
-            return View(circleService.GetAll());
+            return View(circleService.Get());
         }
         //get single instance of circle
         public ActionResult Details(string id)
         {
             if (id != null)
             {
-                var circle = circleService.GetSingle(id);
+                var circle = circleService.Get(id);
                 if (circle != null)
                 {
                     return View(circle);
@@ -55,9 +55,9 @@ namespace DAB3_SocialNetwork.Controllers
 
         public ActionResult AddUser(string userId, string circleName)
         {
-            var user = userService.GetSingle(userId);
+            var user = userService.Get(userId);
 
-            var circles = circleService.GetAll();
+            var circles = circleService.Get();
             var circle = new Circle();
             foreach (var c in circles)
             {
@@ -78,7 +78,7 @@ namespace DAB3_SocialNetwork.Controllers
         {
             if (id != null)
             {
-                var circle = circleService.GetSingle(id);
+                var circle = circleService.Get(id);
                 if(circle != null)
                 {
                     return View(circle);
@@ -113,7 +113,7 @@ namespace DAB3_SocialNetwork.Controllers
         {
             if (id != null)
             {
-                var circle = circleService.GetSingle(id);
+                var circle = circleService.Get(id);
                 if (circle != null)
                 {
                     return View(circle);
@@ -130,7 +130,7 @@ namespace DAB3_SocialNetwork.Controllers
         {
             try
             {
-                var circle = circleService.GetSingle(id);
+                var circle = circleService.Get(id);
 
                 if (circle == null)
                 {

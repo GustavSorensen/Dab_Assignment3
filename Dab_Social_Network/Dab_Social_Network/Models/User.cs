@@ -15,7 +15,7 @@ namespace Dab_Social_Network.Models
         public int Age { get; set; }
         public IEnumerable<string> PostIds { get; set; } = new List<string>();
         public IEnumerable<string> CircleIds { get; set; } = new List<string>();
-        public IEnumerable<string> FriendIds { get; set; } = new List<string>();
+        public IEnumerable<string> FollowerIds { get; set; } = new List<string>();
         public IEnumerable<string> BlockedUserIds { get; set; } = new List<string>();
         
     }

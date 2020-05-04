@@ -28,12 +28,12 @@ namespace Dab_Social_Network.Services
 
             entities = db.GetCollection<Model>(nameOfEntity);
         }
-        public List<Model> GetAll()
+        public List<Model> Get()
         {
             return entities.Find(e => true).ToList();
         }
 
-        public Model GetSingle(string id)
+        public Model Get(string id)
         {
             return entities.Find(id).First();
         }

@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dab_Social_Network.Models;
 using Dab_Social_Network.Services;
+using Dab_Social_Network.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DAB3_SocialNetwork.Controllers
+namespace Dab_Social_Network.Controllers
 {
     public class PostController : Controller
     {
@@ -24,7 +25,7 @@ namespace DAB3_SocialNetwork.Controllers
         // GET: Post
         public ActionResult Index()
         {
-            return View(postService.GetAll());
+            return View(postService.Get());
         }
 
         // GET: Post/Create
@@ -32,69 +33,59 @@ namespace DAB3_SocialNetwork.Controllers
         [AutoValidateAntiforgeryToken]
         public ActionResult Create(string id)
         {
-            ViewData["Id"] = id;
+            PostViewModel viewModel = new PostViewModel();
 
-            var model = new PostCreateViewModel()
+            ViewData["Circles"] = viewModel.circles;
+
+            Post post = new Post()
             {
-                post = new Post(),
-                Circle = ""
+                UserId = id,
             };
-
-
             return View();
         }
 
         // POST: Post/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(PostCreateViewModel model)
+        public ActionResult Create(PostViewModel model)
         {
             if (ModelState.IsValid)
             {
-                model.post.Time = DateTime.Now;
+                model.post.Created = DateTime.Now;
                 var createdPost = postService.Add(model.post);
 
-                var user = userService.GetSingle(model.post.Id);
+                var user = userService.Get(model.post.Id);
 
                 if (user != null)
                 {
-                    if (user.PostIds == null)
-                    {
-                        user.PostIds = new List<string>();
-                    }
-
-                    var circles = circleService.GetAll();
+                    var circles = circleService.Get();
                     Circle circle = new Circle();
 
                     foreach (var c in circles)
                     {
-                        if (c.Name == model.Circle)
+                        if (c.Name == model.circle.Name)
+                        {
                             circle = c;
+                        }
                     }
+                    circle.PostIds.ToList().Add(createdPost.Id);
+                    circleService.Update(circle, circle.Id);
 
-                    if (circle.PostIds == null)
+                    if (string.IsNullOrEmpty(model.circle.Name))
                     {
-                        circle.PostIds = new List<string>();
-                    }
-
-                    circle.PostIds.Add(createdPost.PostId);
-                    _circleService.Update(circle.CircleId, circle);
-
-                    if (string.IsNullOrEmpty(model.Circle))
-                    {
-                        user.PostIds.Add(createdPost.PostId);
-                        _userService.Update(user.UserId, user);
+                        user.PostIds.ToList().Add(createdPost.Id);
+                        userService.Update(user, user.Id);
                     }
                 }
                 else
                 {
                     return NotFound();
                 }
-
-
-                return RedirectToAction("profile", "Session", new { id = _userService.Get(model.post.Author).UserId });
+                return RedirectToAction("profile", "Session", new 
+                {
+                    id = userService.Get(model.post.Id).Id 
+                });
             }
-
             return View();
         }
 
@@ -103,72 +94,35 @@ namespace DAB3_SocialNetwork.Controllers
         [AutoValidateAntiforgeryToken]
         public ActionResult CreateComment(string userId, string postId)
         {
-            ViewData["Author"] = userId;
+            ViewData["Id"] = userId;
 
-            var post = _postService.Get(postId);
+            var post = postService.Get(postId);
 
-            var viewModel = new PostCommentViewModel
+            var viewModel = new PostViewModel
             {
-                Post = post,
-                Comment = new Comment()
+                post = post,
+                comment = new Comment()
             };
-
             return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateComment(PostCommentViewModel postComment)
+        public ActionResult CreateComment(PostViewModel viewModel)
         {
-            postComment.Comment.Time = DateTime.Now;
+            viewModel.comment.TimeCreated = DateTime.Now;
 
-            var post = _postService.Get(postComment.Post.PostId);
+            var post = postService.Get(viewModel.post.Id);
 
-            if (post.Comments == null)
-            {
-                post.Comments = new List<Comment>();
-            }
+            post.Comments.ToList().Add(viewModel.comment);
 
-            post.Comments.Add(postComment.Comment);
-
-            _postService.Update(post.PostId, post);
+            postService.Update(post, post.Id);
 
             return RedirectToAction("profile", "Session", new
             {
-                id = postComment.Comment.Author
+                id = viewModel.comment.Id
             });
         }
-
-
-
-
-
-        // GET: Post/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    return View();
-        //}
-
-
-        // POST: Post/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add update logic here
-
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-
-
 
         // GET: Post/Delete/5
         public ActionResult Delete(string id)
@@ -178,12 +132,11 @@ namespace DAB3_SocialNetwork.Controllers
                 return NotFound();
             }
 
-            var post = _postService.Get(id);
+            var post = postService.Get(id);
             if (post == null)
             {
                 return NotFound();
             }
-
             return View(post);
         }
 
@@ -194,22 +147,20 @@ namespace DAB3_SocialNetwork.Controllers
         {
             try
             {
-                var post = _postService.Get(id);
+                var post = postService.Get(id);
 
                 if (post == null)
                 {
                     return NotFound();
                 }
 
-                _postService.Remove(post.PostId);
+                postService.Delete(post.Id);
 
                 return RedirectToAction(nameof(Index));
-
             }
             catch
             {
                 return View();
-
             }
         }
     }
