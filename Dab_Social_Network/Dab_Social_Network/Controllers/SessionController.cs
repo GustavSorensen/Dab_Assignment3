@@ -20,7 +20,7 @@ namespace Dab_Social_Network.Controllers
         private readonly Service<Circle> circleService;
 
         static volatile User user;
-        static volatile ProfileViewModel UserList = new ProfileViewModel();
+        static volatile ProfileViewModel profileViewModel = new ProfileViewModel();
 
 
         public SessionController(ILogger<HomeController> logger, Service<User> userService, PostService postService, Service<Circle> circleService)
@@ -68,44 +68,43 @@ namespace Dab_Social_Network.Controllers
             ViewData["FollowerPosts"] = followerposts;
             ViewData["Followers"] = followers;
 
-            return View(UserList);
+            return View(profileViewModel);
         }
 
         public IActionResult profile(string id)
         {
-            if (_user == null)
+            if (user == null)
             {
-                _user = _userService.Get(id);
+                user = userService.Get(id);
             }
 
             // Get all posts
-            UserList.user = _user;
-            if (_user.PostIds != null)
+            profileViewModel.User = user;
+            if (user.PostIds != null)
             {
-                foreach (var PostId in _user.PostIds)
+                foreach (var PostId in user.PostIds)
                 {
-                    UserList.posts.Add(_postService.Get(PostId));
+                    profileViewModel.UserPosts.ToList().Add(postService.Get(PostId));
                 }
             }
 
-            //Get all circles and comments
-            if (_user.CircleIds != null)
+            //Get all circles and posts
+            if (user.CircleIds != null)
             {
-                foreach (var userCircleId in _user.CircleIds)
+                foreach (var userCircleId in user.CircleIds)
                 {
-                    UserList.circles.Add(_circleService.Get(userCircleId));
-                    if (UserList.circles.Last().PostIds == null) // --- bedre metode?
-                        continue;
-                    foreach (var circlepost in UserList.circles.Last().PostIds)
+                    profileViewModel.Circles.ToList().Add(circleService.Get(userCircleId));
+                    if (profileViewModel.Circles.ToList().Last().PostIds == null)
                     {
-                        UserList.circleposts.Add(_postService.Get(circlepost));
+                        continue;
+                    }
+                    foreach (var post in profileViewModel.Circles.Last().PostIds)
+                    {
+                        profileViewModel.CirclePosts.ToList().Add(postService.Get(post));
                     }
                 }
             }
-
-            //get all comments in circles
-
-            return View(UserList);
+            return View(profileViewModel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -117,18 +116,18 @@ namespace Dab_Social_Network.Controllers
         [HttpGet]
         public ActionResult GoToFeed()
         {
-            if (_user != null)
+            if (user != null)
             {
-                return RedirectToAction("Feed", "Session", new { id = _user.UserId });
+                return RedirectToAction("Feed", "Session", new { id = user.Id });
             }
             return NotFound();
         }
 
         public ActionResult GoToProfile()
         {
-            if (_user != null)
+            if (user != null)
             {
-                return RedirectToAction("profile", "Session", new { id = _user.UserId });
+                return RedirectToAction("profile", "Session", new { id = user.Id });
             }
             return NotFound();
         }
