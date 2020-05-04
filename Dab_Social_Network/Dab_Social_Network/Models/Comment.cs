@@ -7,11 +7,8 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dab_Social_Network.Models
 {
-    public class Comment
+    public class Comment : Model
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string CommentId { get; set; }
         public string Content { get; set; }
         public DateTime TimeCreated { get; set; }
         public string UserId { get; set; }

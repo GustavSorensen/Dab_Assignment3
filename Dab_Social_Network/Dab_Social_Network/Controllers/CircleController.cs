@@ -12,25 +12,25 @@ namespace DAB3_SocialNetwork.Controllers
 {
     public class CircleController : Controller
     {
-        private readonly CircleService circleService;
-        private readonly UserService userService;
+        private readonly Service<Circle> circleService;
+        private readonly Service<User> userService;
 
-        public CircleController(CircleService circleService, UserService userService)
+        public CircleController(Service<Circle> circleService, Service<User> userService)
         {
-            circleService = circleService;
-            userService = userService;
+            this.circleService = circleService;
+            this.userService = userService;
         }
         //get all circles
         public ActionResult Index()
         {
-            return View(circleService.GetAllCircles());
+            return View(circleService.GetAll());
         }
         //get single instance of circle
         public ActionResult Details(string id)
         {
             if (id != null)
             {
-                var circle = circleService.GetSingleCircle(id);
+                var circle = circleService.GetSingle(id);
                 if (circle != null)
                 {
                     return View(circle);
@@ -43,12 +43,11 @@ namespace DAB3_SocialNetwork.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Circle circle)
         {
-
             if (ModelState.IsValid)
             {
-                _circleService.Create(circle);
-                return RedirectToAction(nameof(Index));
+                circleService.Add(circle);
 
+                return RedirectToAction(nameof(Index));
             }
 
             return View();
@@ -56,57 +55,36 @@ namespace DAB3_SocialNetwork.Controllers
 
         public ActionResult AddUser(string userId, string circleName)
         {
-            var user = _userService.Get(userId);
+            var user = userService.GetSingle(userId);
 
-            var circles = _circleService.Get();
+            var circles = circleService.GetAll();
             var circle = new Circle();
             foreach (var c in circles)
             {
                 if (c.Name == circleName)
                     circle = c;
             }
+            user.CircleIds.ToList().Add(circle.Id);
+            userService.Update(user, user.Id);
 
-            if (user.CircleIds == null)
-            {
-                user.CircleIds = new List<string>();
-            }
+            circle.UserIds.ToList().Add(user.Id);
+            circleService.Update(circle, circle.Id);
 
-            if (circle.UserIds == null)
-            {
-                circle.UserIds = new List<string>();
-            }
-
-            user.CircleIds.Add(circle.CircleId);
-            _userService.Update(user.UserId, user);
-
-            circle.UserIds.Add(user.UserId);
-            _circleService.Update(circle.CircleId, circle);
-
-            return RedirectToAction("profile", "Session", new { id = user.UserId });
+            return RedirectToAction("profile", "Session", new { id = user.Id });
         }
-
-
-
-
-
 
         // GET: Circle/Edit/5
         public ActionResult Edit(string id)
         {
-            if (id == null)
+            if (id != null)
             {
-                return NotFound();
+                var circle = circleService.GetSingle(id);
+                if(circle != null)
+                {
+                    return View(circle);
+                }
             }
-
-            var circle = _circleService.Get(id);
-            if (circle == null)
-            {
-                return NotFound();
-            }
-
-
-
-            return View(circle);
+            return NotFound();
         }
 
 
@@ -115,44 +93,34 @@ namespace DAB3_SocialNetwork.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(string id, Circle circle)
         {
-            if (id != circle.CircleId)
+            if (id != circle.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _circleService.Update(id, circle);
+                circleService.Update(circle, id);
                 return RedirectToAction(nameof(Index));
             }
             else
             {
-                //return View(circleService.Get());
                 return View(circle);
-
-
             }
         }
-
-
-
-
-
         // GET: Circle/Delete/5
         public ActionResult Delete(string id)
         {
-            if (id == null)
+            if (id != null)
             {
-                return NotFound();
+                var circle = circleService.GetSingle(id);
+                if (circle != null)
+                {
+                    return View(circle);
+                }
             }
+            return NotFound();
 
-            var circle = _circleService.Get(id);
-            if (circle == null)
-            {
-                return NotFound();
-            }
-
-            return View(circle);
         }
 
         // POST: Circle/Delete/5
@@ -160,20 +128,18 @@ namespace DAB3_SocialNetwork.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-
             try
             {
-                var circle = _circleService.Get(id);
+                var circle = circleService.GetSingle(id);
 
                 if (circle == null)
                 {
                     return NotFound();
                 }
 
-                _circleService.Remove(circle.CircleId);
+                circleService.Delete(circle.Id);
 
                 return RedirectToAction(nameof(Index));
-
             }
             catch
             {

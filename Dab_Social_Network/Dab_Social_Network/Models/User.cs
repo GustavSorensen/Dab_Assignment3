@@ -8,11 +8,8 @@ using MongoDB.Driver.Core.Operations;
 
 namespace Dab_Social_Network.Models
 {
-    public class User
+    public class User : Model
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int Age { get; set; }

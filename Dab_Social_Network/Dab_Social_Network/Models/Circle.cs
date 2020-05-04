@@ -7,13 +7,10 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dab_Social_Network.Models
 {
-    public class Circle
+    public class Circle : Model
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string CircleId { get; set; }
         public string Name { get; set; }
-        public IEnumerable<string> UserIds { get; set; }
-        public IEnumerable<string> PostIds { get; set; }
+        public IEnumerable<string> UserIds { get; set; } = new List<string>();
+        public IEnumerable<string> PostIds { get; set; } = new List<string>();
     }
 }

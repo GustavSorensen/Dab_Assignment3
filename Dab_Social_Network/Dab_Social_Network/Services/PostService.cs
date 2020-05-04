@@ -7,7 +7,7 @@ using Dab_Social_Network.Models;
 
 namespace Dab_Social_Network.Services
 {
-    public class PostService
+    public class PostService : Service<Post>, IService<Post>
     {
         private readonly IMongoCollection<Post> posts;
 
@@ -17,38 +17,10 @@ namespace Dab_Social_Network.Services
             var db = client.GetDatabase("");
 
             posts = db.GetCollection<Post>("Post");
-
         }
-
-        public List<Post> GetAllPosts()
+        public List<Post> GetPostByUserId(string id)
         {
-            return posts.Find(post => true).ToList();
-        }
-
-        public Post GetSinglePost(string id)
-        {
-            return posts.Find(post => post.PostId == id).FirstOrDefault();
-        }
-
-        public List<Post> GetPostByUser(string user)
-        {
-            return posts.Find(p => p.UserId == user).ToList();
-        }
-
-        public Post AddPost(Post post)
-        {
-            posts.InsertOne(post);
-            return post;
-        }
-
-        public async void UpdatePost(Post post)
-        {
-            var list = new List<Post> { post };
-
-            var filter = Builders<Post>.Filter.Eq("Id", post.PostId);
-            var update = Builders<Post>.Update.Set("Post", list);
-            await posts.UpdateOneAsync(filter, update);
-
+            return posts.Find(p => p.UserId == id).ToList();
         }
     }
 }
