@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Dab_Social_Network.Models;
+using Dab_Social_Network.Services;
 
 namespace Dab_Social_Network
 {
@@ -25,13 +27,14 @@ namespace Dab_Social_Network
         public void ConfigureServices(IServiceCollection services)
         {
             // requires using Microsoft.Extensions.Options
-            //SocialNetworkDatabaseSettings burde virke ifølge Microsoft (se appsettings.json) 
+            //SocialNetworkDatabaseSettings burde virke ifølge Microsoft (se appsettings.json og Ctor i services) 
             services.Configure<SocialNetworkDatabaseSettings>(
                 Configuration.GetSection(nameof(SocialNetworkDatabaseSettings)));
 
             services.AddSingleton<SocialNetworkDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<SocialNetworkDatabaseSettings>>().Value);
 
+            services.AddSingleton<PostService>();
 
             services.AddControllersWithViews();
         }
