@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace Dab_Social_Network
 {
@@ -23,6 +24,15 @@ namespace Dab_Social_Network
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // requires using Microsoft.Extensions.Options
+            //SocialNetworkDatabaseSettings burde virke ifølge Microsoft (se appsettings.json) 
+            services.Configure<SocialNetworkDatabaseSettings>(
+                Configuration.GetSection(nameof(SocialNetworkDatabaseSettings)));
+
+            services.AddSingleton<SocialNetworkDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<SocialNetworkDatabaseSettings>>().Value);
+
+
             services.AddControllersWithViews();
         }
 
