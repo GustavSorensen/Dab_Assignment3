@@ -11,12 +11,12 @@ namespace Dab_Social_Network.Services
     {
         private readonly IMongoCollection<Post> posts;
 
-        public PostService()
+        public PostService(ISocialNetworkDatabaseSettings settings)
         {
-            var client = new MongoClient("");
-            var db = client.GetDatabase("");
+            var client = new MongoClient(settings.ConnectionString);
+            var db = client.GetDatabase(settings.DatabaseName);
 
-            posts = db.GetCollection<Post>("Post");
+            posts = db.GetCollection<Post>(settings.PostCollectionName);
         }
         public List<Post> GetPostByUserId(string id)
         {
