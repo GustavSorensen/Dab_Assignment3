@@ -51,7 +51,7 @@ namespace Dab_Social_Network.Controllers
         {
             if (ModelState.IsValid)
             {
-                model.post.Created = DateTime.Now;
+                model.post.TimeCreated= DateTime.Now;
                 var createdPost = postService.Add(model.post);
 
                 var user = userService.Get(model.post.Id);

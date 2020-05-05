@@ -16,7 +16,7 @@ namespace Dab_Social_Network.Models
         public string Id { get; set; }
         public string Content { get; set; }
         public string UserId { get; set; }
-        public DateTime Created { get; set; }
+        public DateTime TimeCreated { get; set; }
 
         [BsonElement("ImageUrl")]
         [Display(Name = "Photo")]
