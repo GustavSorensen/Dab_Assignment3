@@ -9,8 +9,8 @@ namespace Dab_Social_Network.Services
 {
     interface IService<Model>
     {
-        List<Model> GetAll();
-        Model GetSingle(string id);
+        List<Model> Get();
+        Model Get(string id);
         Model Add(Model entity);
         void Update(Model entity, string id);
         void Delete(string id);
@@ -19,20 +19,20 @@ namespace Dab_Social_Network.Services
     {
         private readonly IMongoCollection<Model> entities;
         //private string name;
-        public Service() { }
-        public Service(ISocialNetworkDatabaseSettings settings)
+        //public Service() { }
+        public Service(ISocialNetworkDatabaseSettings settings, string nameOfDbSet)
         {
-            var client = new MongoClient(settings.UserCollectionName);
+            var client = new MongoClient(settings.ConnectionString);
             var db = client.GetDatabase(settings.DatabaseName);
 
-            entities = db.GetCollection<Model>(settings.UserCollectionName);
+            entities = db.GetCollection<Model>(nameOfDbSet);
         }
-        public List<Model> GetAll()
+        public List<Model> Get()
         {
             return entities.Find(e => true).ToList();
         }
 
-        public Model GetSingle(string id)
+        public Model Get(string id)
         {
             return entities.Find(id).First();
         }
