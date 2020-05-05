@@ -13,6 +13,7 @@ namespace Dab_Social_Network.Controllers
     public class UserController : Controller
     {
         private readonly UserService userService;
+        private static User loggedInUser;
 
         public UserController(UserService userService)
         {
@@ -20,6 +21,10 @@ namespace Dab_Social_Network.Controllers
         }
         // GET: User
         public ActionResult Index()
+        {
+            return View(userService.Get());
+        }
+        public ActionResult IndexToFollow()
         {
             return View(userService.Get());
         }
@@ -32,6 +37,11 @@ namespace Dab_Social_Network.Controllers
         {
             return View();
         }
+        public ActionResult LogIn(string id)
+        {
+            loggedInUser = userService.Get(id);
+            return RedirectToAction("Profile", "Session", new { id = loggedInUser.Id });
+        }
         // POST: User/Create
         [HttpPost]
         public ActionResult Create(User user)
@@ -39,7 +49,7 @@ namespace Dab_Social_Network.Controllers
             try
             {
                 userService.Add(user);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Profile", "Session", new { id = user.Id });
             }
             catch
             {
@@ -47,22 +57,18 @@ namespace Dab_Social_Network.Controllers
             }
         }
 
-        public ActionResult AddFollower(string userId, string userToFollow)
+        public ActionResult AddFollower(string userId)
         {
-            var user = userService.Get(userToFollow);
-
-            user.FollowerIds.ToList().Add(userId);
+            loggedInUser.FollowerIds.ToList().Add(userId);
             
-            return RedirectToAction("profile", "Session", new { id = user.Id });
+            return RedirectToAction("Profile", "Session", new { id = loggedInUser.Id });
         }
 
-        public ActionResult BlockUser(string userId, string userToBlock)
+        public ActionResult BlockUser(string userId)
         {
-            var user = userService.Get(userToBlock);
+            loggedInUser.BlockedUserIds.ToList().Add(userId);
 
-            user.BlockedUserIds.ToList().Add(userId);
-
-            return RedirectToAction("profile", "Session", new { id = user.Id });
+            return RedirectToAction("Profile", "Session", new { id = userId });
         }
 
         // GET: User/Delete/5

@@ -71,7 +71,7 @@ namespace Dab_Social_Network.Controllers
             return View(profileViewModel);
         }
 
-        public IActionResult profile(string id)
+        public IActionResult Profile(string id)
         {
             if (user == null)
             {

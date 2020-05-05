@@ -26,7 +26,7 @@ namespace Dab_Social_Network.Services
 
         public TEntity Get(string id)
         {
-            return entities.Find(id).First();
+            return entities.Find<TEntity>(x => x.Id == id).First();
         }
 
         public TEntity Add(TEntity entity)
