@@ -18,22 +18,21 @@ namespace Dab_Social_Network.Services
     public class Service<Model> : IService<Model> where Model : IModel
     {
         private readonly IMongoCollection<Model> entities;
-        private string name;
+        //private string name;
         public Service() { }
-        public Service(string nameOfEntity)
+        public Service(ISocialNetworkDatabaseSettings settings)
         {
-            var client = new MongoClient("");
-            var db = client.GetDatabase("");
-            name = nameOfEntity;
+            var client = new MongoClient(settings.UserCollectionName);
+            var db = client.GetDatabase(settings.DatabaseName);
 
-            entities = db.GetCollection<Model>(nameOfEntity);
+            entities = db.GetCollection<Model>(settings.UserCollectionName);
         }
-        public List<Model> Get()
+        public List<Model> GetAll()
         {
             return entities.Find(e => true).ToList();
         }
 
-        public Model Get(string id)
+        public Model GetSingle(string id)
         {
             return entities.Find(id).First();
         }

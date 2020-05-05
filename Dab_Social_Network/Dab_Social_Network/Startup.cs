@@ -35,6 +35,7 @@ namespace Dab_Social_Network
                 sp.GetRequiredService<IOptions<SocialNetworkDatabaseSettings>>().Value);
 
             services.AddSingleton<PostService>();
+            //services.AddSingleton<Service>();
 
             services.AddControllersWithViews();
         }
