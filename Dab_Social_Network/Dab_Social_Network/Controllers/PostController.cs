@@ -13,10 +13,10 @@ namespace Dab_Social_Network.Controllers
     public class PostController : Controller
     {
         private readonly PostService postService;
-        private readonly Service<User> userService;
-        private readonly Service<Circle> circleService;
+        private readonly UserService userService;
+        private readonly CircleService circleService;
 
-        public PostController(PostService postService, Service<User> userService, Service<Circle> circleService)
+        public PostController(PostService postService, UserService userService, CircleService circleService)
         {
             this.postService = postService;
             this.userService = userService;

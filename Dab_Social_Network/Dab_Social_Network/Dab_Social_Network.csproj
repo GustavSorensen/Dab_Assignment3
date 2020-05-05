@@ -16,8 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Feed\" />
-    <Folder Include="Views\User\" />
     <Folder Include="Views\Post\" />
   </ItemGroup>
 

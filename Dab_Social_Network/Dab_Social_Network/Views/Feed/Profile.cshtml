@@ -1,0 +1,151 @@
+﻿@model Dab_Social_Network.Models.ViewModels.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h1>profile/Wall</h1>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.User.FirstName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.User.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.User.LastName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.User.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.User.Age)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.User.Age)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    @Html.ActionLink("Create New Post", "Create", "Post", new { id = Model.User.Id })
+</div>
+<div>
+    <form method="POST" asp-controller="Circle" asp-action="AddUser">
+        Add Me to Circle BY NAME (A, B, C):
+        <input id="userId" name="userId" type="hidden" value="@Model.User.Id" />
+        <input id="circleName" name="circleName" type="Text" />
+        <input value="Submit" type="Submit" />
+    </form>
+</div>
+
+<div>
+    <form method="POST" asp-controller="User" asp-action="AddFollower">
+        Add Follower by NAME:
+        <input id="userId" name="userId" type="hidden" value="@Model.User.Id" />
+        <input id="followerName" name="followerName" type="Text" />
+        <input value="Submit" type="Submit" />
+    </form>
+</div>
+
+<div>
+    <form method="POST" asp-controller="User" asp-action="AddBlockedUser">
+        Block a user by NAME:
+        <input id="userId" name="userId" type="hidden" value="@Model.User.Id" />
+        <input id="blockedUserName" name="blockedUserName" type="Text" />
+        <input value="Submit" type="Submit" />
+    </form>
+</div>
+
+<h2>User public posts </h2>
+@if (Model.UserPosts != null)
+{
+    <hr />
+    @foreach (var post in Model.UserPosts)
+    {
+        @if (post == null)
+        {
+            continue;
+        }
+        <tr>
+            <td>
+                @if (post.ImageUrl != null)
+                {
+                    <img style="width: 100px; height: 100px; margin-right: 20px" src="@Url.Content(post.ImageUrl)" alt="Image" />
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(model => post.Created)
+            </td>
+            <td>
+                @Html.DisplayFor(model => post.Content)
+            </td>
+        </tr>
+        <td>
+            @Html.ActionLink("Comment", "CreateComment", "Post", new { userId = Model.User.Id, postId = post.Id })
+        </td>
+
+        <p>Comments:</p>
+        @foreach (var postComment in post.Comments)
+        {
+            <tr>
+                <td>
+                    <b>Author:</b>
+                    @Html.DisplayFor(model => postComment.UserId)
+                </td>
+                <td>
+                    <b>Time:</b>
+                    @Html.DisplayFor(model => postComment.TimeCreated)
+                </td>
+                <td>
+                    <b>Text:</b>
+                    @Html.DisplayFor(model => postComment.Content)
+                </td>
+            </tr>
+            <br />
+        }
+        <hr />
+    }
+    <tbody />
+}
+
+
+<h2>User posts to circles I'm member of</h2>
+@if (Model.Circles != null)
+{
+    @foreach (var circle in Model.Circles)
+    {
+        <text><b><i>Posts in circle name: </i></b></text>
+        @Html.DisplayFor(model => circle.Name)
+        <br />
+        @for (int i = 0; i < circle.PostIds.ToList().Count; i++)
+        {
+            if (Model.CirclePosts.ToList()[i] == null)
+                continue;
+            <tr>
+                <td>
+                    <text><b><i>posted at: </i></b></text>
+                    @Html.DisplayFor(model => Model.CirclePosts.ToList()[i].Created)
+                    <text><b><i>by UserId: </i></b></text>
+                    @Html.DisplayFor(model => Model.CirclePosts.ToList()[i].UserId)
+                    <text><b><i>wrote: </i></b></text>
+                    @Html.DisplayFor(model => Model.CirclePosts.ToList()[i].Content)
+
+                    @if (Model.CirclePosts.ToList()[i].ImageUrl != null)
+                    {
+                        <img style="width: 200px" src="@Url.Content(Model.CirclePosts.ToList()[i].ImageUrl)" alt=Image />
+                    }
+                </td>
+                <br />
+            </tr>
+        }
+    }
+}
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.user.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>

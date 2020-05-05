@@ -9,13 +9,12 @@ namespace Dab_Social_Network.Services
 {
     public class UserService : Service<User>
     {
-        private readonly IMongoCollection<User> entities;
-        public UserService(ISocialNetworkDatabaseSettings settings)
+        public UserService(ISocialNetworkDatabaseSettings settings) : base(settings)
         {
             var client = new MongoClient(settings.ConnectionString);
             var db = client.GetDatabase(settings.DatabaseName);
 
-            entities = db.GetCollection<User>(settings.UserCollectionName);
+            base.entities = db.GetCollection<User>(settings.UserCollectionName);
         }
     }
 }

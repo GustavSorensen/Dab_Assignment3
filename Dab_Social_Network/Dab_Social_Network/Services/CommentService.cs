@@ -9,13 +9,12 @@ namespace Dab_Social_Network.Services
 {
     public class CommentService : Service<Comment>
     {
-        private readonly IMongoCollection<Comment> entities;
-        public CommentService(ISocialNetworkDatabaseSettings settings)
+        public CommentService(ISocialNetworkDatabaseSettings settings) : base(settings)
         {
             var client = new MongoClient(settings.ConnectionString);
             var db = client.GetDatabase(settings.DatabaseName);
 
-            entities = db.GetCollection<Comment>(settings.commentCollectionName);
+            base.entities = db.GetCollection<Comment>(settings.CollectionName);
         }
 
     }

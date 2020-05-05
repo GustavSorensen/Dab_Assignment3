@@ -1,0 +1,150 @@
+﻿@model Dab_Social_Network.Models.ViewModels.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Feed";
+}
+
+@{
+    var followers = ViewData["Followers"] as List<User>;
+}
+
+@{
+    var followerposts = ViewData["FollowerPosts"] as List<Post>;
+}
+@{
+    var blockedList = ViewData["BlockedUsers"] as List<User>;
+}
+
+
+
+<h1>Welcome to the feed @Html.DisplayFor(m => m.User.FirstName) </h1>
+<div>
+    @Html.ActionLink("Create New Post", "Create", "Post", new { id = Model.User.Id })
+</div>
+
+<h2>User public posts </h2>
+@if (Model.UserPosts != null)
+{
+    <hr />
+    @foreach (var post in Model.UserPosts)
+    {
+        if (post == null)
+            continue;
+        <tr>
+            <td>
+                @if (post.ImageUrl != null)
+                {
+                    <img style="width: 100px; height: 100px; margin-right: 20px" src="@Url.Content(post.ImageUrl)" alt="Image" />
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(model => post.Created)
+            </td>
+            <td>
+                @Html.DisplayFor(model => post.Content)
+            </td>
+        </tr>
+        <td>
+            @Html.ActionLink("Comment", "CreateComment", "Post", new { userId = Model.User.Id, postId = post.Id })
+        </td>
+
+        <p>Comments:</p>
+        @foreach (var postComment in post.Comments)
+        {
+            <tr>
+                <td>
+                    <b>Author:</b>
+                    @Html.DisplayFor(model => postComment.UserId)
+                </td>
+                <td>
+                    <b>Time:</b>
+                    @Html.DisplayFor(model => postComment.TimeCreated)
+                </td>
+                <td>
+                    <b>Text:</b>
+                    @Html.DisplayFor(model => postComment.Content)
+                </td>
+            </tr>
+            <br />
+        }
+        <hr />
+    }
+    <tbody />
+}
+
+
+<h2>User posts to circles I'm member of</h2>
+@if (Model.Circles != null)
+{
+    @foreach (var circle in Model.Circles)
+    {
+        <text><b><i>Posts in circle name: </i></b></text>
+        @Html.DisplayFor(model => circle.Name)
+        <br />
+        @for (int i = 0; i < circle.PostIds.ToList().Count; i++)
+        {
+            if (Model.CirclePosts.ToList()[i] == null)
+                continue;
+            <tr>
+                <td>
+                    <text><b><i>posted at: </i></b></text>
+                    @Html.DisplayFor(model => Model.CirclePosts.ToList()[i].Created)
+                    <text><b><i>by UserId: </i></b></text>
+                    @Html.DisplayFor(model => Model.CirclePosts.ToList()[i].UserId)
+                    <text><b><i>wrote: </i></b></text>
+                    @Html.DisplayFor(model => Model.CirclePosts.ToList()[i].Content)
+
+                    @if (Model.CirclePosts.ToList()[i].ImageUrl != null)
+                    {
+                        <img height="50px" width="50px" src="@Url.Content(Model.CirclePosts.ToList()[i].ImageUrl)" alt=Image />
+                    }
+                </td>
+                <br />
+            </tr>
+        }
+    }
+}
+
+<h2>User posts from users I follow</h2>
+@if (followers != null)
+{
+    @foreach (var follower in followers)
+    {
+        <text><b><i>Posts by </i></b></text>
+        @Html.DisplayFor(model => follower.FirstName)
+        <br />
+        @for (int i = 0; i < followerposts.Count; i++)
+        {
+            if (followerposts[i] == null)
+                continue;
+            <tr>
+                <td>
+                    <text><b><i>posted at: </i></b></text>
+                    @Html.DisplayFor(model => followerposts[i].Created)
+                    <text><b><i>wrote: </i></b></text>
+                    @Html.DisplayFor(model => followerposts[i].Content)
+
+                    @if (followerposts[i].ImageUrl != null)
+                    {
+                        <img height="50px" width="50px" src="@Url.Content(followerposts[i].ImageUrl)" alt=Image />
+                    }
+                </td>
+                <br />
+            </tr>
+        }
+    }
+}
+@foreach (var blocked in blockedList)
+{
+    <tr>
+        <td>
+            <text><b><i>Blocked User: </i></b></text>
+            @Html.DisplayFor(model => blocked.FirstName)
+        </td>
+        <br />
+    </tr>
+}
+<div>
+    @Html.ActionLink("Edit", "Edit", new {  }) |
+    <a asp-action="Index">Back to List</a>
+</div>

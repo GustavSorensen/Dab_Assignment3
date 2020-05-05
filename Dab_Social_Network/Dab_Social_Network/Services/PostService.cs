@@ -9,18 +9,16 @@ namespace Dab_Social_Network.Services
 {
     public class PostService : Service<Post>, IService<Post>
     {
-        private readonly IMongoCollection<Post> posts;
-
-        public PostService(ISocialNetworkDatabaseSettings settings)
+        public PostService(ISocialNetworkDatabaseSettings settings) : base(settings)
         {
             var client = new MongoClient(settings.ConnectionString);
             var db = client.GetDatabase(settings.DatabaseName);
 
-            posts = db.GetCollection<Post>(settings.PostCollectionName);
+            entities = db.GetCollection<Post>(settings.PostCollectionName);
         }
         public List<Post> GetPostByUserId(string id)
         {
-            return posts.Find(p => p.UserId == id).ToList();
+            return entities.Find(p => p.UserId == id).ToList();
         }
     }
 }

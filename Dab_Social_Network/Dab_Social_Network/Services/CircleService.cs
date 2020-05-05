@@ -9,13 +9,12 @@ namespace Dab_Social_Network.Services
 {
     public class CircleService : Service<Circle>
     {
-        private readonly IMongoCollection<Circle> entities;
-        public CircleService(ISocialNetworkDatabaseSettings settings)
+        public CircleService(ISocialNetworkDatabaseSettings settings) : base(settings)
         {
             var client = new MongoClient(settings.ConnectionString);
             var db = client.GetDatabase(settings.DatabaseName);
 
-            entities = db.GetCollection<Circle>(settings.CircleCollectionName);
+            base.entities = db.GetCollection<Circle>(settings.CircleCollectionName);
         }
     }
 }

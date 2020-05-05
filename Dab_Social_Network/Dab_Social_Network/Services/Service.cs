@@ -17,7 +17,11 @@ namespace Dab_Social_Network.Services
     }
     public class Service<Model> : IService<Model> where Model : IModel
     {
-        private readonly IMongoCollection<Model> entities;
+        public IMongoCollection<Model> entities;
+        public Service(ISocialNetworkDatabaseSettings settings)
+        {
+            
+        }
         public List<Model> Get()
         {
             return entities.Find(e => true).ToList();

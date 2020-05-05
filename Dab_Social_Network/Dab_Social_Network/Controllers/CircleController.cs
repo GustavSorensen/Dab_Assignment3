@@ -12,10 +12,10 @@ namespace Dab_Social_Network.Controllers
 {
     public class CircleController : Controller
     {
-        private readonly Service<Circle> circleService;
-        private readonly Service<User> userService;
+        private readonly CircleService circleService;
+        private readonly UserService userService;
 
-        public CircleController(Service<Circle> circleService, Service<User> userService)
+        public CircleController(CircleService circleService, UserService userService)
         {
             this.circleService = circleService;
             this.userService = userService;

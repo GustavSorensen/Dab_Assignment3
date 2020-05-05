@@ -15,15 +15,15 @@ namespace Dab_Social_Network.Controllers
     public class SessionController : Controller
     {
         private readonly ILogger<HomeController> logger;
-        private readonly Service<User> userService;
+        private readonly UserService userService;
         private readonly PostService postService;
-        private readonly Service<Circle> circleService;
+        private readonly CircleService circleService;
 
         static volatile User user;
         static volatile ProfileViewModel profileViewModel = new ProfileViewModel();
 
 
-        public SessionController(ILogger<HomeController> logger, Service<User> userService, PostService postService, Service<Circle> circleService)
+        public SessionController(ILogger<HomeController> logger, UserService userService, PostService postService, CircleService circleService)
         {
             this.logger = logger;
             this.userService = userService;
@@ -64,7 +64,7 @@ namespace Dab_Social_Network.Controllers
                 }
             }
 
-            ViewData["BlockedUserIds"] = blockedlist;
+            ViewData["BlockedUsers"] = blockedlist;
             ViewData["FollowerPosts"] = followerposts;
             ViewData["Followers"] = followers;
 

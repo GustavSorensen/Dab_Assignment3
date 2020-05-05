@@ -12,9 +12,9 @@ namespace Dab_Social_Network.Controllers
 {
     public class UserController : Controller
     {
-        private readonly Service<User> userService;
+        private readonly UserService userService;
 
-        public UserController(Service<User> userService)
+        public UserController(UserService userService)
         {
             this.userService = userService;
         }
@@ -28,9 +28,12 @@ namespace Dab_Social_Network.Controllers
         {
             return View(userService.Get(id));
         }
+        public ActionResult Create()
+        {
+            return View();
+        }
         // POST: User/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Create(User user)
         {
             try
