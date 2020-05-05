@@ -64,7 +64,7 @@ namespace Dab_Social_Network.Controllers
                 }
             }
 
-            ViewData["BlockedUsers"] = blockedlist;
+            ViewData["BlockedUserIds"] = blockedlist;
             ViewData["FollowerPosts"] = followerposts;
             ViewData["Followers"] = followers;
 

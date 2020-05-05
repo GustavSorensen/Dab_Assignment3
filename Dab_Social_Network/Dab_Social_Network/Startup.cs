@@ -31,13 +31,13 @@ namespace Dab_Social_Network
             services.Configure<SocialNetworkDatabaseSettings>(
                 Configuration.GetSection(nameof(SocialNetworkDatabaseSettings)));
 
-            services.AddSingleton<SocialNetworkDatabaseSettings>(sp =>
+            services.AddSingleton<ISocialNetworkDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<SocialNetworkDatabaseSettings>>().Value);
 
             services.AddSingleton<PostService>();
-            services.AddSingleton<Service<User>>();
-            services.AddSingleton<Service<Comment>>();
-            services.AddSingleton<Service<Circle>>();
+            services.AddSingleton<UserService>();
+            services.AddSingleton<CommentService>();
+            services.AddSingleton<CircleService>();
 
             services.AddControllersWithViews();
         }
