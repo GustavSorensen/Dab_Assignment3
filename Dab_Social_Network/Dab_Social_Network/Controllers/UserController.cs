@@ -48,7 +48,7 @@ namespace Dab_Social_Network.Controllers
         {
             var user = userService.Get(userToFollow);
 
-            user.FriendIds.ToList().Add(userId);
+            user.FollowerIds.ToList().Add(userId);
             
             return RedirectToAction("profile", "Session", new { id = user.Id });
         }
