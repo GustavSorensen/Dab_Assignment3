@@ -39,8 +39,7 @@ namespace Dab_Social_Network.Controllers
             try
             {
                 userService.Add(user);
-                return NotFound();
-                //return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
             catch
             {
