@@ -40,7 +40,7 @@ namespace Dab_Social_Network.Controllers
         public ActionResult LogIn(string id)
         {
             loggedInUser = userService.Get(id);
-            return RedirectToAction("Profile", "Session", new { id = loggedInUser.Id });
+            return RedirectToAction("Profile", "Session", new { id = id });
         }
         // POST: User/Create
         [HttpPost]
@@ -49,6 +49,7 @@ namespace Dab_Social_Network.Controllers
             try
             {
                 userService.Add(user);
+                loggedInUser = user;
                 return RedirectToAction("Profile", "Session", new { id = user.Id });
             }
             catch
