@@ -37,10 +37,10 @@ namespace Dab_Social_Network.Controllers
         {
             return View();
         }
-        public ActionResult LogIn(string id)
+        public ActionResult LogIn(string userId)
         {
-            loggedInUser = userService.Get(id);
-            return RedirectToAction("Profile", "Session", new { id = id });
+            loggedInUser = userService.Get(userId);
+            return RedirectToAction("Profile", "Session", new { id = userId });
         }
         // POST: User/Create
         [HttpPost]

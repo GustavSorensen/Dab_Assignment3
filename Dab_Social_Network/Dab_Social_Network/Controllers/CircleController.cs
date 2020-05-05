@@ -70,7 +70,7 @@ namespace Dab_Social_Network.Controllers
             circle.UserIds.ToList().Add(user.Id);
             circleService.Update(circle, circle.Id);
 
-            return RedirectToAction("profile", "Session", new { id = user.Id });
+            return RedirectToAction("Profile", "Session", new { id = user.Id });
         }
 
         // GET: Circle/Edit/5
@@ -86,28 +86,8 @@ namespace Dab_Social_Network.Controllers
             }
             return NotFound();
         }
-
-
-        // POST: Circle/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string id, Circle circle)
-        {
-            if (id != circle.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                circleService.Update(circle, id);
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                return View(circle);
-            }
-        }
         // GET: Circle/Delete/5
         public ActionResult Delete(string id)
         {

@@ -27,19 +27,40 @@ namespace Dab_Social_Network.Controllers
         {
             return View(postService.Get());
         }
-
-        // GET: Post/Create
         [HttpGet]
         [AutoValidateAntiforgeryToken]
-        public ActionResult Create(string id)
+        public ActionResult Create(string userId)
         {
-            PostViewModel viewModel = new PostViewModel();
-
-            ViewData["Circles"] = viewModel.circles;
-
-            Post post = new Post()
+            ViewData["userId"] = userId;
+            ViewData["time"] = DateTime.Now;
+            return View(); //gets the create view
+        }
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public ActionResult Create(Post post)
+        {
+            try 
             {
-                UserId = id,
+                postService.Add(post);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
+        // GET: Post/Create
+        /*
+        [HttpGet]
+        [AutoValidateAntiforgeryToken]
+        public ActionResult CreateToCircle(string userId, string circleId)
+        {
+            ViewData["id"] = userId;
+            var circle = circleService.Get(circleId);
+            var model = new PostViewModel()
+            {
+                Post = new Post(),
+                Circle = circle
             };
             return View();
         }
@@ -47,14 +68,14 @@ namespace Dab_Social_Network.Controllers
         // POST: Post/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(PostViewModel model)
+        public ActionResult CreateToCirlce(PostViewModel model)
         {
             if (ModelState.IsValid)
             {
-                model.post.TimeCreated= DateTime.Now;
-                var createdPost = postService.Add(model.post);
+                model.Post.TimeCreated= DateTime.Now;
+                var createdPost = postService.Add(model.Post);
 
-                var user = userService.Get(model.post.Id);
+                var user = userService.Get(model.Post.Id);
 
                 if (user != null)
                 {
@@ -63,7 +84,7 @@ namespace Dab_Social_Network.Controllers
 
                     foreach (var c in circles)
                     {
-                        if (c.Name == model.circle.Name)
+                        if (c.Name == model.Circle.Name)
                         {
                             circle = c;
                         }
@@ -71,7 +92,7 @@ namespace Dab_Social_Network.Controllers
                     circle.PostIds.ToList().Add(createdPost.Id);
                     circleService.Update(circle, circle.Id);
 
-                    if (string.IsNullOrEmpty(model.circle.Name))
+                    if (string.IsNullOrEmpty(model.Circle.Name))
                     {
                         user.PostIds.ToList().Add(createdPost.Id);
                         userService.Update(user, user.Id);
@@ -83,12 +104,12 @@ namespace Dab_Social_Network.Controllers
                 }
                 return RedirectToAction("profile", "Session", new 
                 {
-                    id = userService.Get(model.post.Id).Id 
+                    id = userService.Get(model.Post.Id).Id 
                 });
             }
             return View();
         }
-
+        */
 
         [HttpGet]
         [AutoValidateAntiforgeryToken]
@@ -100,8 +121,8 @@ namespace Dab_Social_Network.Controllers
 
             var viewModel = new PostViewModel
             {
-                post = post,
-                comment = new Comment()
+                Post = post,
+                Comment = new Comment()
             };
             return View(viewModel);
         }
@@ -110,17 +131,17 @@ namespace Dab_Social_Network.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateComment(PostViewModel viewModel)
         {
-            viewModel.comment.TimeCreated = DateTime.Now;
+            viewModel.Comment.TimeCreated = DateTime.Now;
 
-            var post = postService.Get(viewModel.post.Id);
+            var post = postService.Get(viewModel.Post.Id);
 
-            post.Comments.ToList().Add(viewModel.comment);
+            post.Comments.ToList().Add(viewModel.Comment);
 
             postService.Update(post, post.Id);
 
             return RedirectToAction("profile", "Session", new
             {
-                id = viewModel.comment.Id
+                id = viewModel.Comment.Id
             });
         }
 

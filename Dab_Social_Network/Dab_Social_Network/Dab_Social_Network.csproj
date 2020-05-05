@@ -16,8 +16,4 @@
     <PackageReference Include="MongoDB.Driver.Core" Version="2.10.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Post\" />
-  </ItemGroup>
-
 </Project>

@@ -43,10 +43,7 @@
                 @Html.DisplayFor(modelItem => item.Id)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Log In", "LogIn", new { id = item.Id})|
+                @Html.ActionLink("Log In", "LogIn", new { userId = item.Id})|
             </td>
         </tr>
 }
