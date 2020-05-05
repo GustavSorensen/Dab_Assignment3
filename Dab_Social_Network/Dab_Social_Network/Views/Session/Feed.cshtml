@@ -38,7 +38,7 @@
                 }
             </td>
             <td>
-                @Html.DisplayFor(model => post.Created)
+                @Html.DisplayFor(model => post.TimeCreated)
             </td>
             <td>
                 @Html.DisplayFor(model => post.Content)
@@ -88,7 +88,7 @@
             <tr>
                 <td>
                     <text><b><i>posted at: </i></b></text>
-                    @Html.DisplayFor(model => Model.CirclePosts.ToList()[i].Created)
+                    @Html.DisplayFor(model => Model.CirclePosts.ToList()[i].TimeCreated)
                     <text><b><i>by UserId: </i></b></text>
                     @Html.DisplayFor(model => Model.CirclePosts.ToList()[i].UserId)
                     <text><b><i>wrote: </i></b></text>
@@ -120,7 +120,7 @@
             <tr>
                 <td>
                     <text><b><i>posted at: </i></b></text>
-                    @Html.DisplayFor(model => followerposts[i].Created)
+                    @Html.DisplayFor(model => followerposts[i].TimeCreated)
                     <text><b><i>wrote: </i></b></text>
                     @Html.DisplayFor(model => followerposts[i].Content)
 
