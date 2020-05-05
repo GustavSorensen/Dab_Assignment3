@@ -7,14 +7,14 @@ using MongoDB.Driver;
 
 namespace Dab_Social_Network.Services
 {
-    public class UserService : Service<User>
+    public class UserService : Service<User>, IService<User>
     {
-        public UserService(ISocialNetworkDatabaseSettings settings) : base(settings)
+        public UserService(ISocialNetworkDatabaseSettings settings)
         {
             var client = new MongoClient(settings.ConnectionString);
             var db = client.GetDatabase(settings.DatabaseName);
 
-            base.entities = db.GetCollection<User>(settings.UserCollectionName);
+            this.Entities = db.GetCollection<User>(settings.UserCollectionName);
         }
     }
 }

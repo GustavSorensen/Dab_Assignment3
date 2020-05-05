@@ -7,14 +7,14 @@ using MongoDB.Driver;
 
 namespace Dab_Social_Network.Services
 {
-    public class CircleService : Service<Circle>
+    public class CircleService : Service<Circle>, IService<Circle>
     {
-        public CircleService(ISocialNetworkDatabaseSettings settings) : base(settings)
+        public CircleService(ISocialNetworkDatabaseSettings settings)
         {
             var client = new MongoClient(settings.ConnectionString);
             var db = client.GetDatabase(settings.DatabaseName);
 
-            base.entities = db.GetCollection<Circle>(settings.CircleCollectionName);
+            this.Entities = db.GetCollection<Circle>(settings.CircleCollectionName);
         }
     }
 }

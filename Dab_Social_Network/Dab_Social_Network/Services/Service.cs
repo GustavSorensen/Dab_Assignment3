@@ -7,38 +7,35 @@ using Dab_Social_Network.Models;
 
 namespace Dab_Social_Network.Services
 {
-    interface IService<Model>
+    interface IService<TEntity>
     {
-        List<Model> Get();
-        Model Get(string id);
-        Model Add(Model entity);
-        void Update(Model entity, string id);
+        List<TEntity> Get();
+        TEntity Get(string id);
+        TEntity Add(TEntity entity);
+        void Update(TEntity entity, string id);
         void Delete(string id);
     }
-    public class Service<Model> : IService<Model> where Model : IModel
+    public class Service<TEntity> : IService<TEntity> where TEntity : IModel
     {
-        public IMongoCollection<Model> entities;
-        public Service(ISocialNetworkDatabaseSettings settings)
-        {
-            
-        }
-        public List<Model> Get()
+        private IMongoCollection<TEntity> entities;
+        public IMongoCollection<TEntity> Entities { get { return entities; } set { entities = value; } }
+        public List<TEntity> Get()
         {
             return entities.Find(e => true).ToList();
         }
 
-        public Model Get(string id)
+        public TEntity Get(string id)
         {
             return entities.Find(id).First();
         }
 
-        public Model Add(Model entity)
+        public TEntity Add(TEntity entity)
         {
             entities.InsertOne(entity);
             return entity;
         }
 
-        public void Update(Model entity, string id)
+        public void Update(TEntity entity, string id)
         {
             entities.ReplaceOne(x => x.Id == id, entity);
         }

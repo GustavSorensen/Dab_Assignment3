@@ -9,12 +9,12 @@ namespace Dab_Social_Network.Services
 {
     public class CommentService : Service<Comment>
     {
-        public CommentService(ISocialNetworkDatabaseSettings settings) : base(settings)
+        public CommentService(ISocialNetworkDatabaseSettings settings)
         {
             var client = new MongoClient(settings.ConnectionString);
             var db = client.GetDatabase(settings.DatabaseName);
 
-            base.entities = db.GetCollection<Comment>(settings.CollectionName);
+            Entities = db.GetCollection<Comment>(settings.CommentCollectionName);
         }
 
     }

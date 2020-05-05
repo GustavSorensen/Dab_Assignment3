@@ -11,10 +11,4 @@ namespace Dab_Social_Network.Models
     {
         string Id { get; set; }
     }
-    public class Model : IModel
-    {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-    }
 }

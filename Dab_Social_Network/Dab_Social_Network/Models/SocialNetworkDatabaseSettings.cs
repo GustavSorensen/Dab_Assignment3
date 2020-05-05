@@ -12,7 +12,6 @@ namespace Dab_Social_Network.Models
         public string PostCollectionName { get; set; }
         public string CommentCollectionName { get; set; }
         public string ConnectionString { get; set; }
-        public string CollectionName { get; set; }
         public string DatabaseName { get; set; }
     }
 
@@ -22,7 +21,6 @@ namespace Dab_Social_Network.Models
         string CircleCollectionName { get; set; }
         string PostCollectionName { get; set; }
         string CommentCollectionName { get; set; }
-        string CollectionName { get; set; }
         string ConnectionString { get; set; }
         string DatabaseName { get; set; }
     }

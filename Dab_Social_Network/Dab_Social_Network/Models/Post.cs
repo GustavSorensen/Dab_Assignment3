@@ -9,8 +9,11 @@ using MongoDB.Driver.Core.Operations;
 
 namespace Dab_Social_Network.Models
 {
-    public class Post : Model
+    public class Post : IModel
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
         public string Content { get; set; }
         public string UserId { get; set; }
         public DateTime Created { get; set; }
