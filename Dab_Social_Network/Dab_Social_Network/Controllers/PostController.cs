@@ -15,9 +15,11 @@ namespace Dab_Social_Network.Controllers
         private readonly PostService postService;
         private readonly UserService userService;
         private readonly CircleService circleService;
+        private readonly CommentService commentService;
 
-        public PostController(PostService postService, UserService userService, CircleService circleService)
+        public PostController(PostService postService, UserService userService, CircleService circleService, CommentService commentService)
         {
+            this.commentService = commentService;
             this.postService = postService;
             this.userService = userService;
             this.circleService = circleService;
@@ -55,7 +57,6 @@ namespace Dab_Social_Network.Controllers
             }
         }
         // GET: Post/Create
-        /*
         [HttpGet]
         [AutoValidateAntiforgeryToken]
         public ActionResult CreateToCircle(string userId, string circleId)
@@ -114,39 +115,34 @@ namespace Dab_Social_Network.Controllers
             }
             return View();
         }
-        */
 
         [HttpGet]
         [AutoValidateAntiforgeryToken]
         public ActionResult CreateComment(string userId, string postId)
         {
-            ViewData["Id"] = userId;
+            ViewData["UserId"] = userId;
+            ViewData["PostId"] = postId;
 
             var post = postService.Get(postId);
 
-            var viewModel = new PostViewModel
-            {
-                Post = post,
-                Comment = new Comment()
-            };
-            return View(viewModel);
+            return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateComment(PostViewModel viewModel)
+        public ActionResult CreateComment(Comment comment)
         {
-            viewModel.Comment.TimeCreated = DateTime.Now;
+            comment.TimeCreated = DateTime.Now;
 
-            var post = postService.Get(viewModel.Post.Id);
+            var post = postService.Get(comment.PostId);
 
-            post.Comments.ToList().Add(viewModel.Comment);
+            post.Comments.Add(comment);
 
             postService.Update(post, post.Id);
-
-            return RedirectToAction("profile", "Session", new
+            commentService.Update(comment, comment.Id);
+            return RedirectToAction("Profile", "Session", new
             {
-                id = viewModel.Comment.Id
+                id = comment.UserId
             });
         }
          [HttpGet]

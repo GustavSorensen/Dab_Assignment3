@@ -38,6 +38,11 @@ namespace Dab_Social_Network.Controllers
             }
             return NotFound();
         }
+        [HttpGet]
+        public ActionResult Create()
+        {
+            return View();
+        }
         // POST: Circle/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -101,31 +106,6 @@ namespace Dab_Social_Network.Controllers
             }
             return NotFound();
 
-        }
-
-        // POST: Circle/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
-        {
-            try
-            {
-                var circle = circleService.Get(id);
-
-                if (circle == null)
-                {
-                    return NotFound();
-                }
-
-                circleService.Delete(circle.Id);
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-
-            }
         }
     }
 }
