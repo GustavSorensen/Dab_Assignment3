@@ -43,8 +43,8 @@
                 @Html.DisplayFor(modelItem => item.Age)
             </td>
             <td>
-                @Html.ActionLink("Follow", "AddFollower", new { id = item.Id }) |
-                @Html.ActionLink("Block", "BlockUser", new { id = item.Id })
+                @Html.ActionLink("Follow", "AddFollower", new { userId = item.Id }) |
+                @Html.ActionLink("Block", "BlockUser", new { userId = item.Id })
             </td>
         </tr>
 }

@@ -35,27 +35,22 @@ namespace Dab_Social_Network.Controllers
             List<Post> followerposts = new List<Post>();
             List<User> followers = new List<User>();
             List<User> blockedlist = new List<User>();
-            if (user.FollowerIds != null)
+
+            // Get users we follow and their posts
+            foreach (var follower in user.FollowerIds)
             {
-                // Get users we follow and their posts
-                foreach (var follower in user.FollowerIds)
+                if (user.BlockedUserIds.Contains(follower))
                 {
-                    if (user.BlockedUserIds.Contains(follower))
-                    {
-                        continue;
-                    }
-                    followers.Add(userService.Get(follower));
-                    //if there are no posts just continue
-                    if (followers.Last().PostIds == null)
-                    {
-                        continue;
-                    }
-                    foreach (var post in followers.Last().PostIds)
-                    {
-                        followerposts.Add(postService.Get(post));
-                    }
+                    continue;
+                }
+                followers.Add(userService.Get(follower));
+                //if there are no posts just continue
+                foreach (var post in followers.Last().PostIds)
+                {
+                    followerposts.Add(postService.Get(post));
                 }
             }
+            
             if (user.BlockedUserIds != null)
             {
                 foreach (var bUser in user.BlockedUserIds)
@@ -73,34 +68,32 @@ namespace Dab_Social_Network.Controllers
 
         public IActionResult Profile(string id)
         {
-            if (user == null)
-            {
-                user = userService.Get(id);
-            }
+            profileViewModel = new ProfileViewModel();
+            user = userService.Get(id);
+            
 
             // Get all posts
             profileViewModel.User = user;
-            if (user.PostIds != null)
+
+            foreach (var PostId in user.PostIds)
             {
-                foreach (var PostId in user.PostIds)
-                {
-                    profileViewModel.UserPosts.ToList().Add(postService.Get(PostId));
-                }
+                profileViewModel.UserPosts.Add(postService.Get(PostId));
             }
+            
 
             //Get all circles and posts
             if (user.CircleIds != null)
             {
                 foreach (var userCircleId in user.CircleIds)
                 {
-                    profileViewModel.Circles.ToList().Add(circleService.Get(userCircleId));
-                    if (profileViewModel.Circles.ToList().Last().PostIds == null)
+                    profileViewModel.Circles.Add(circleService.Get(userCircleId));
+                    if (profileViewModel.Circles.Last().PostIds == null)
                     {
                         continue;
                     }
                     foreach (var post in profileViewModel.Circles.Last().PostIds)
                     {
-                        profileViewModel.CirclePosts.ToList().Add(postService.Get(post));
+                        profileViewModel.CirclePosts.Add(postService.Get(post));
                     }
                 }
             }
@@ -127,7 +120,7 @@ namespace Dab_Social_Network.Controllers
         {
             if (user != null)
             {
-                return RedirectToAction("profile", "Session", new { id = user.Id });
+                return RedirectToAction("Profile", "Session", new { id = user.Id });
             }
             return NotFound();
         }

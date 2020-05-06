@@ -15,13 +15,13 @@ namespace Dab_Social_Network.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         public string Content { get; set; }
-        public string UserId { get; set; }
+        public string UserId { get; set; } //maybe post thinks this is its primary key?
         public DateTime TimeCreated { get; set; }
 
         [BsonElement("ImageUrl")]
         [Display(Name = "Photo")]
         [DataType(DataType.ImageUrl)]
         public string ImageUrl { get; set; }
-        public IEnumerable<Comment> Comments { get; set; } = new List<Comment>();
+        public List<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

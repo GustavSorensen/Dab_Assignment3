@@ -31,8 +31,8 @@ namespace Dab_Social_Network.Controllers
         [AutoValidateAntiforgeryToken]
         public ActionResult Create(string userId)
         {
-            ViewData["userId"] = userId;
-            ViewData["time"] = DateTime.Now;
+            ViewData["UserId"] = userId;
+            ViewData["TimeCreated"] = DateTime.Now.ToString();
             return View(); //gets the create view
         }
         [HttpPost]
@@ -41,7 +41,12 @@ namespace Dab_Social_Network.Controllers
         {
             try 
             {
+                post.TimeCreated = DateTime.Now;
+                postService.Update(post, post.Id);
                 postService.Add(post);
+                var user = userService.Get(post.UserId);
+                user.PostIds.Add(post.Id);
+                userService.Update(user, user.Id);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -144,27 +149,9 @@ namespace Dab_Social_Network.Controllers
                 id = viewModel.Comment.Id
             });
         }
-
+         [HttpGet]
         // GET: Post/Delete/5
         public ActionResult Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var post = postService.Get(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-            return View(post);
-        }
-
-        // POST: Post/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
         {
             try
             {
@@ -181,7 +168,7 @@ namespace Dab_Social_Network.Controllers
             }
             catch
             {
-                return View();
+                return NotFound();
             }
         }
     }

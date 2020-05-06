@@ -16,10 +16,10 @@ namespace Dab_Social_Network.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Age { get; set; }
-        public IEnumerable<string> PostIds { get; set; } = new List<string>();
-        public IEnumerable<string> CircleIds { get; set; } = new List<string>();
-        public IEnumerable<string> FollowerIds { get; set; } = new List<string>();
-        public IEnumerable<string> BlockedUserIds { get; set; } = new List<string>();
+        public List<string> PostIds { get; set; } = new List<string>();
+        public List<string> CircleIds { get; set; } = new List<string>();
+        public List<string> FollowerIds { get; set; } = new List<string>();
+        public List<string> BlockedUserIds { get; set; } = new List<string>();
         
     }
 }

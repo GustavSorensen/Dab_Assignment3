@@ -4,10 +4,10 @@
     ViewData["Title"] = "Create";
 }
 @{ 
-    var userId = ViewData["userId"];
+    var userId = ViewData["UserId"] as string;
 }
 @{ 
-    var time = ViewData["time"];
+    var time = ViewData["TimeCreated"] as string;
 }
 <h1>Create</h1>
 
@@ -27,6 +27,7 @@
                 <input asp-for="ImageUrl" class="form-control" />
                 <span asp-validation-for="ImageUrl" class="text-danger"></span>
             </div>
+            <input asp-for="Id" style="display: none" />
             <input asp-for="UserId" style="display: none" value="@userId" />
             <input asp-for="TimeCreated" style="display: none" value="@time" />
             <div class="form-group">

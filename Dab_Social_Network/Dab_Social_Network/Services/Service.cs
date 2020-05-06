@@ -41,7 +41,7 @@ namespace Dab_Social_Network.Services
         }
         public void Delete(string id)
         {
-            entities.DeleteOne(id);
+            entities.DeleteOne(x => x.Id == id);
         }
     }
 }

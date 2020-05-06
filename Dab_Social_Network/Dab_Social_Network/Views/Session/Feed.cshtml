@@ -45,7 +45,7 @@
             </td>
         </tr>
         <td>
-            @Html.ActionLink("Comment", "CreateComment", "Post", new { userId = Model.User.Id, postId = post.Id })
+            @Html.ActionLink("Commenttesst", "CreateComment", "Post", new { userId = Model.User.Id, postId = post.Id })
         </td>
 
         <p>Comments:</p>
@@ -105,7 +105,7 @@
     }
 }
 
-<h2>User posts from users I follow</h2>
+<h2>User posts from users I follow</h2> 
 @if (followers != null)
 {
     @foreach (var follower in followers)

@@ -13,7 +13,7 @@ namespace Dab_Social_Network.Controllers
     public class UserController : Controller
     {
         private readonly UserService userService;
-        private static User loggedInUser;
+        private static volatile User loggedInUser;
 
         public UserController(UserService userService)
         {
@@ -60,29 +60,43 @@ namespace Dab_Social_Network.Controllers
 
         public ActionResult AddFollower(string userId)
         {
-            loggedInUser.FollowerIds.ToList().Add(userId);
-            
+            if(!loggedInUser.FollowerIds.Contains(userId))
+            {
+                loggedInUser.FollowerIds.Add(userId);
+                userService.Update(loggedInUser, loggedInUser.Id);
+            }
             return RedirectToAction("Profile", "Session", new { id = loggedInUser.Id });
         }
 
         public ActionResult BlockUser(string userId)
         {
-            loggedInUser.BlockedUserIds.ToList().Add(userId);
-
-            return RedirectToAction("Profile", "Session", new { id = userId });
+            if (!loggedInUser.BlockedUserIds.Contains(userId))
+            {
+                loggedInUser.BlockedUserIds.ToList().Add(userId);
+                userService.Update(loggedInUser, loggedInUser.Id);
+            }
+            return RedirectToAction("Profile", "Session", new { id = loggedInUser.Id });
         }
 
         // GET: User/Delete/5
-        public ActionResult Delete(string id)
+        public ActionResult Delete(string userId)
         {
             try
             {
-                userService.Delete(id);
+                var user = userService.Get(userId);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                userService.Delete(user.Id);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return NotFound();
             }
         }
     }
